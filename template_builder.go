@@ -1,4 +1,4 @@
-package template
+package goplate
 
 import (
 	"errors"
@@ -16,7 +16,6 @@ type TransformFunctionMap map[string]TransformFunc
 type Builder struct {
 	TemplateString string
 	Transforms     TransformFunctionMap
-	Marshaler      JSONMarshaler
 	Parameters     interface{}
 }
 
@@ -25,13 +24,13 @@ func New(templateString string) *Builder {
 	ret := &Builder{
 		TemplateString: templateString,
 		Parameters:     nil,
-		Marshaler:      DefaultMarshaler(),
+		Transforms: TransformFunctionMap{
+			"json":   DefaultJSONTransformFunc(DefaultMarshaler()),
+			"asTime": Int64ToDateString,
+			"hex":    HexConversion,
+		},
 	}
-	ret.Transforms = TransformFunctionMap{
-		"json":   DefaultJSONTransformFunc(ret.Marshaler),
-		"asTime": Int64ToDateString,
-		"hex":    HexConversion,
-	}
+
 	return ret
 }
 
@@ -40,7 +39,9 @@ func New(templateString string) *Builder {
 // merged data structure. They are simple strings with no parameters and the
 // key to the
 func (t *Builder) WithTransforms(transformMap TransformFunctionMap) *Builder {
-	t.Transforms = transformMap
+	for k, v := range transformMap {
+		t.Transforms[k] = v
+	}
 	return t
 }
 
@@ -52,7 +53,7 @@ func (t *Builder) WithParameters(params interface{}) *Builder {
 }
 
 func (t *Builder) WithJSONMarshaler(marshaler JSONMarshaler) *Builder {
-	t.Marshaler = marshaler
+	t.Transforms["json"] = DefaultJSONTransformFunc(marshaler)
 	return t
 }
 

@@ -1,4 +1,4 @@
-package template
+package goplate
 
 import "google.golang.org/protobuf/types/known/wrapperspb"
 

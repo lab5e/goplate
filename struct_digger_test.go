@@ -1,4 +1,4 @@
-package template
+package goplate
 
 import (
 	"encoding/base64"
