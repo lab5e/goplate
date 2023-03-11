@@ -19,12 +19,16 @@ type testSubStructure struct {
 }
 
 type testStructure struct {
-	Int16        int16
-	Int32        int32
-	Int64        int64
-	Int32Wrapper *wrapperspb.Int32Value
-	Int64Wrapper *wrapperspb.Int64Value
-	BoolWrapper  *wrapperspb.BoolValue
-	String       string
-	Substructure *testSubStructure
+	Int16         int16
+	Int32         int32
+	Int64         int64
+	Int32Wrapper  *wrapperspb.Int32Value
+	Int64Wrapper  *wrapperspb.Int64Value
+	BoolWrapper   *wrapperspb.BoolValue
+	String        string
+	Substructure  *testSubStructure
+	ArrayOfint64  []int64
+	ArrayOfuint64 []uint64
+	ArrayOfint32  []int32
+	ArrayOfuint32 []uint32
 }

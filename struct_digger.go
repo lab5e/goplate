@@ -211,6 +211,14 @@ func (s *structDigger) getFields(v interface{}, name string, fieldAccess ...int)
 		switch reflect.TypeOf(v).Elem().Kind() {
 		case reflect.Uint8:
 			s.appendField(name, fieldAccess, byteSliceAccess, "", false)
+		case reflect.Int64:
+			s.appendField(name, fieldAccess, int64SliceAccess, "", false)
+		case reflect.Uint64:
+			s.appendField(name, fieldAccess, uint64SliceAccess, "", false)
+		case reflect.Int32:
+			s.appendField(name, fieldAccess, int32SliceAccess, "", false)
+		case reflect.Uint32:
+			s.appendField(name, fieldAccess, uint32SliceAccess, "", false)
 
 		default:
 			panic(fmt.Sprintf("Can't handle %s slices yet", reflect.TypeOf(v).Kind()))
@@ -256,6 +264,44 @@ func byteSliceAccess(val interface{}) string {
 	return base64.StdEncoding.EncodeToString(buf)
 }
 
+func int32SliceAccess(val interface{}) string {
+	buf := val.([]int32)
+	var strs []string
+	for _, v := range buf {
+		strs = append(strs, fmt.Sprintf("%d", v))
+	}
+
+	return "[" + strings.Join(strs, ",") + "]"
+}
+
+func uint32SliceAccess(val interface{}) string {
+	buf := val.([]uint32)
+	var strs []string
+	for _, v := range buf {
+		strs = append(strs, fmt.Sprintf("%d", v))
+	}
+
+	return "[" + strings.Join(strs, ",") + "]"
+}
+
+func int64SliceAccess(val interface{}) string {
+	buf := val.([]int64)
+	var strs []string
+	for _, v := range buf {
+		strs = append(strs, fmt.Sprintf("%d", v))
+	}
+
+	return "[" + strings.Join(strs, ",") + "]"
+}
+func uint64SliceAccess(val interface{}) string {
+	buf := val.([]uint64)
+	var strs []string
+	for _, v := range buf {
+		strs = append(strs, fmt.Sprintf("%d", v))
+	}
+
+	return "[" + strings.Join(strs, ",") + "]"
+}
 func intAccess(val interface{}) string {
 	return strconv.Itoa(int(val.(int)))
 }

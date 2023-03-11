@@ -15,12 +15,16 @@ func TestStructDigger(t *testing.T) {
 	assert.NotNil(sd)
 
 	testData := &testStructure{
-		Int16:        16,
-		Int32:        32,
-		Int64:        64,
-		Int32Wrapper: &wrapperspb.Int32Value{Value: 132},
-		Int64Wrapper: &wrapperspb.Int64Value{Value: 164},
-		BoolWrapper:  &wrapperspb.BoolValue{Value: true},
+		Int16:         16,
+		Int32:         32,
+		Int64:         64,
+		Int32Wrapper:  &wrapperspb.Int32Value{Value: 132},
+		Int64Wrapper:  &wrapperspb.Int64Value{Value: 164},
+		BoolWrapper:   &wrapperspb.BoolValue{Value: true},
+		ArrayOfint32:  []int32{1, 2, 3, 4},
+		ArrayOfuint32: []uint32{1, 2, 3, 4},
+		ArrayOfint64:  []int64{1, 2, 3, 4},
+		ArrayOfuint64: []uint64{1, 2, 3, 4},
 		Substructure: &testSubStructure{
 			Bool:   true,
 			String: &wrapperspb.StringValue{Value: "str"},
@@ -117,6 +121,30 @@ func TestStructDigger(t *testing.T) {
 	testData.Substructure.Binary = []byte(payload)
 	expected := base64.StdEncoding.EncodeToString(testData.Substructure.Binary)
 	buf, found = sd.GetValue("substructure.binary", testData)
+	assert.True(found)
+	assert.Equal(expected, string(buf))
+
+	testData.ArrayOfint32 = []int32{1, 2, 3}
+	expected = "[1,2,3]"
+	buf, found = sd.GetValue("arrayofint32", testData)
+	assert.True(found)
+	assert.Equal(expected, string(buf))
+
+	testData.ArrayOfuint32 = []uint32{1, 2, 3}
+	expected = "[1,2,3]"
+	buf, found = sd.GetValue("arrayofuint32", testData)
+	assert.True(found)
+	assert.Equal(expected, string(buf))
+
+	testData.ArrayOfint64 = []int64{1, 2, 3}
+	expected = "[1,2,3]"
+	buf, found = sd.GetValue("arrayofint64", testData)
+	assert.True(found)
+	assert.Equal(expected, string(buf))
+
+	testData.ArrayOfuint64 = []uint64{1, 2, 3}
+	expected = "[1,2,3]"
+	buf, found = sd.GetValue("arrayofuint64", testData)
 	assert.True(found)
 	assert.Equal(expected, string(buf))
 }
